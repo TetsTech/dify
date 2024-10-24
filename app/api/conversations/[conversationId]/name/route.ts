@@ -5,15 +5,32 @@ import { client, getInfo } from '@/app/api/utils/common'
 export async function POST(request: NextRequest, { params }: {
   params: { conversationId: string }
 }) {
+  // Lidar com preflight request para CORS
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://humanauniversity.ai', // O domínio do seu site WordPress
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
+  }
+
+  // Processar a requisição principal
   const body = await request.json()
-  const {
-    auto_generate,
-    name,
-  } = body
+  const { auto_generate, name } = body
   const { conversationId } = params
   const { user } = getInfo(request)
 
-  // auto generate name
+  // Auto gerar nome
   const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
-  return NextResponse.json(data)
+
+  // Responder com os cabeçalhos CORS corretos
+  const response = NextResponse.json(data)
+  response.headers.set('Access-Control-Allow-Origin', 'https://humanauniversity.ai') // O domínio que poderá acessar
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+  return response
 }
