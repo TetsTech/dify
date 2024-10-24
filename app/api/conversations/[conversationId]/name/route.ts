@@ -10,7 +10,7 @@ export async function POST(request: NextRequest, { params }: {
     return new NextResponse(null, {
       status: 200,
       headers: {
-        'Access-Control-Allow-Origin': 'https://humanauniversity.ai', // O domínio do seu site WordPress
+        'Access-Control-Allow-Origin': 'https://humanauniversity.ai', // Substitua pelo domínio permitido
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
@@ -30,9 +30,20 @@ export async function POST(request: NextRequest, { params }: {
   // Auto gerar nome
   const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
 
+  // Adiciona o conversationId na resposta para o outro domínio
+  const responseData = {
+    ...data,
+    conversationId,  // Incluir o conversationId na resposta JSON
+  }
+
+  // Enviar o conversationId para a janela pai usando postMessage
+  if (typeof window !== 'undefined') {
+    window.parent.postMessage({ conversationId }, 'https://humanauniversity.ai'); // Substitua pelo domínio do WordPress
+  }
+
   // Responder com os cabeçalhos CORS corretos
-  const response = NextResponse.json(data)
-  response.headers.set('Access-Control-Allow-Origin', 'https://humanauniversity.ai') // O domínio que poderá acessar
+  const response = NextResponse.json(responseData)
+  response.headers.set('Access-Control-Allow-Origin', 'https://humanauniversity.ai') // Substitua pelo domínio externo
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
