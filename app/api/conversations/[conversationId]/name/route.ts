@@ -20,7 +20,7 @@ export async function POST(request: NextRequest, { params }: {
   // Processar a requisição principal
   const body = await request.json()
   const { auto_generate, name } = body
-  const { conversationId } = params
+  const { conversationId } = params // Mantenha isso se ainda precisar do ID da URL
 
   // Mostrar o conversationId no console sempre que a API for chamada
   console.log('Conversation ID:', conversationId);
@@ -30,15 +30,21 @@ export async function POST(request: NextRequest, { params }: {
   // Auto gerar nome
   const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
 
-  // Adiciona o conversationId na resposta para o outro domínio
-  const responseData = {
-    ...data,
-    conversationId,  // Incluir o conversationId na resposta JSON
+  // Pegar conversationIdInfo do localStorage (isso é feito no lado do cliente, não no servidor)
+  let conversationIdInfo;
+  if (typeof window !== 'undefined') {
+    conversationIdInfo = localStorage.getItem('conversationIdInfo'); // Pega o valor do localStorage
   }
 
-  // Enviar o conversationId para a janela pai usando postMessage
-  if (typeof window !== 'undefined') {
-    window.parent.postMessage({ conversationId }, 'https://humanauniversity.ai'); // Substitua pelo domínio do WordPress
+  // Adiciona o conversationIdInfo na resposta para o outro domínio
+  const responseData = {
+    ...data,
+    conversationIdInfo,  // Incluir o conversationIdInfo na resposta JSON
+  }
+
+  // Enviar o conversationIdInfo para a janela pai usando postMessage
+  if (typeof window !== 'undefined' && conversationIdInfo) {
+    window.parent.postMessage({ conversationIdInfo }, 'https://humanauniversity.ai'); // Substitua pelo domínio do WordPress
   }
 
   // Responder com os cabeçalhos CORS corretos
