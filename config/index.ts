@@ -1,7 +1,7 @@
 import type { AppInfo } from '@/types/app'
-export const APP_ID = `${process.env.NEXT_PUBLIC_APP_ID}`
-export const API_KEY = `${process.env.NEXT_PUBLIC_APP_KEY}`
-export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
+export const APP_ID = '8c55630c-bdb2-4f10-aef0-75c7eef82bd6'
+export const API_KEY = 'app-T3sg0lIQQyYjq9l0n7ZAS678'
+export const API_URL = 'https://dify.humana.team/v1'
 export const APP_INFO: AppInfo = {
   title: 'Professor',
   description: '',
