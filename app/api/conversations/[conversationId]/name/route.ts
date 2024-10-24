@@ -21,6 +21,10 @@ export async function POST(request: NextRequest, { params }: {
   const body = await request.json()
   const { auto_generate, name } = body
   const { conversationId } = params
+
+  // Mostrar o conversationId no console
+  console.log('Conversation ID:', conversationId);
+
   const { user } = getInfo(request)
 
   // Auto gerar nome
