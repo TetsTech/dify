@@ -27,6 +27,9 @@ export async function POST(request: NextRequest, { params }: {
   // Requisição ao client para pegar feedback e conversationId
   const { data } = await client.messageFeedback(messageId, rating, user);
 
+  // Mostrar o conversationId no console
+  console.log('Conversation ID:', data.conversationId);
+
   // Retornar dados com cabeçalhos CORS configurados
   const response = NextResponse.json({
     conversationId: data.conversationId, // Expor conversationId aqui
