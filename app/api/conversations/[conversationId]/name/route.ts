@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: {
   const { auto_generate, name } = body
   const { conversationId } = params
 
-  // Mostrar o conversationId no console
+  // Mostrar o conversationId no console sempre que a API for chamada
   console.log('Conversation ID:', conversationId);
 
   const { user } = getInfo(request)
