@@ -15,9 +15,5 @@ export async function POST(request: NextRequest) {
 
   const { user } = getInfo(request)
   const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
-
-  // Retorna o conversationId junto com a resposta
-  return new Response(JSON.stringify({ data: res.data, conversationId }), {
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return new Response(res.data as any)
 }
